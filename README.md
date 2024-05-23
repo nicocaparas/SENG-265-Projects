@@ -1,2 +1,2 @@
 # SENG-265-Projects
-SENG265: Software Development Methods Class Projects
+UVic SENG 265: Software Development Methods Projects
