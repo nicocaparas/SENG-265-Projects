@@ -21,7 +21,7 @@
 #define BEFORE_2020_LEN 221 
 #define DURING_2020_LEN 732
 
-//Initialize Song data structure
+// Initialize Song data structure
 typedef struct{
     char song_name[50];
     char artist[100];
@@ -30,22 +30,21 @@ typedef struct{
     int spotify_playlists;
     char key[5];
     char mode[10];
-
 } Song;
 
-int extract_question(char *argument_1); //get question from argument in CLI
-char* extract_filename(char *argument_2); //get file from argument in CLI
+int extract_question(char *argument_1); // Get question from argument in CLI
+char* extract_filename(char *argument_2); // Get file from argument in CLI
 
-void read_data(Song* song_list,char* filename); //Reads data from file into an array
+void read_data(Song* song_list,char* filename); // Reads data from file into an array
 
-//Process questions accordingly
+// Process questions accordingly
 void process_q1(Song* song_list, int array_size);
 void process_q2(Song* song_list, int array_size);
 void process_q3(Song* song_list, int array_size);
 void process_q4(Song* song_list, int array_size);
 void process_q5(Song* song_list, int array_size);
 
-bool find_drake(char *artist_line); //Checks if Drake is in a list of artists
+bool find_drake(char *artist_line); // Checks if Drake is in a list of artists
 
 /**
  * Function: main
@@ -59,21 +58,20 @@ bool find_drake(char *artist_line); //Checks if Drake is in a list of artists
  */
 int main(int argc, char *argv[])
 {
-    //Check if corrent no. of arguments passed
+    // Check if corrent number of arguments passed
     if(argc!=3){
         printf("Please check number of arguments.");
         return 1;
     }
 
-    //Assume all passed arguments are valid
+    // Assume all passed arguments are valid
 
-    //Get the actual value of the argument
+    // Get the actual value of the argument
 
     int question_num = extract_question(argv[1]);
     char* file_name = extract_filename(argv[2]);
     
-    //Get file length based on file_name
-
+    // Get file length based on file_name
     int file_length;
 
     if(strcmp(file_name,"during_2020s.csv")==0){
@@ -83,13 +81,13 @@ int main(int argc, char *argv[])
         file_length = BEFORE_2020_LEN;
     }
 
-    //Create an array of Songs called song_list
+    // Create an array of Songs called song_list
     Song song_list[file_length];
 
-    //Read file data into song_list array 
+    // Read file data into song_list array 
     read_data(song_list,file_name);
     
-    //Process data depending on question number
+    // Process data depending on question number
     switch(question_num){
         case 1: 
             process_q1(song_list,file_length);
@@ -110,37 +108,35 @@ int main(int argc, char *argv[])
     exit(0);
 }
 
-//HELPER FUNCTIONS START HERE
+// HELPER FUNCTIONS START HERE
 
 int extract_question(char *argument_1){
-    //Copy to variable 
+    // Copy argument to variable 
     char str_argument_1[15];
     strcpy(str_argument_1,argument_1);
 
-    //Extract actual value of argument 
+    // Extract actual value of argument 
     char *question_num;
     question_num = strtok(str_argument_1,"=");
     question_num = strtok(NULL," ");
-    //Convert to int 
+    // Convert to int 
     int num = atoi(question_num);
 
     return num;
-
 }
 
 char* extract_filename(char *argument_2){
-    //Copy to variable 
+    // Copy argument to variable 
     char str_argument_2[25];
     strcpy(str_argument_2,argument_2);
 
-    //Extract actual value of argument 
+    // Extract actual value of argument 
     char *file_name;
     file_name = strtok(str_argument_2,"=");
     file_name = strtok(NULL,"=");
 
     return file_name;
 }
-
 
 void read_data(Song* song_list,char* filename){
     FILE* input_file = fopen(filename,"r");
@@ -149,43 +145,43 @@ void read_data(Song* song_list,char* filename){
 
     char line[MAX_LINE_LEN];
 
-    //Copy accordingly to the data types in Song struct
+    // Copy attributes accordingly based on Song struct
     while(fgets(line,MAX_LINE_LEN,input_file)!=NULL){
         char* token;
         
-        token = strtok(line,","); //song name
+        token = strtok(line,","); // song name
         strcpy(song_list[song_count].song_name,token);
 
-        token = strtok(NULL,","); //artist name
+        token = strtok(NULL,","); // artist name
         strcpy(song_list[song_count].artist,token);
 
-        token = strtok(NULL,","); //artist count 
+        token = strtok(NULL,","); // artist count 
         song_list[song_count].artist_count = atoi(token);
 
-        token = strtok(NULL,","); //release year
+        token = strtok(NULL,","); // release year
         song_list[song_count].release_year = atoi(token);
 
-        token = strtok(NULL,","); //spotify playlists
+        token = strtok(NULL,","); // spotify playlists
         song_list[song_count].spotify_playlists = atoi(token);
 
-        token = strtok(NULL,","); //streams 
-        //But we will not add it since steams is not used in this assignment
+        token = strtok(NULL,","); // streams 
+        // We will not add it since steams is not used in this assignment
 
-        token = strtok(NULL,","); //key
+        token = strtok(NULL,","); // key
         strcpy(song_list[song_count].key,token);
 
-        token = strtok(NULL,","); //mode
+        token = strtok(NULL,","); // mode
         strcpy(song_list[song_count].mode,token);
 
         song_count++;  
     }
-
+    
     fclose(input_file);
 }
 
 void process_q1(Song* song_list, int array_size){
 
-    FILE* output_file = fopen("test01.csv","w");
+    FILE* output_file = fopen("output.csv","w");
 
     if(output_file==NULL){
         printf("\nFile creation failed!");
@@ -193,7 +189,7 @@ void process_q1(Song* song_list, int array_size){
 
     fprintf(output_file,"Artist(s),Song\n");
 
-    //Iterate through song_list, if artist == Rae Spoon then print to output file
+    // Iterate through song_list, if artist == Rae Spoon then print to output file
     for (int i = 0; i < array_size; i++){
         if(strcmp(song_list[i].artist,"Rae Spoon")==0){
             fprintf(output_file,"%s,%s\n",song_list[i].artist,song_list[i].song_name);
@@ -205,7 +201,7 @@ void process_q1(Song* song_list, int array_size){
 
 void process_q2(Song* song_list, int array_size){
 
-    FILE* output_file = fopen("test02.csv","w");
+    FILE* output_file = fopen("output.csv","w");
 
     if(output_file==NULL){
         printf("\nFile creation failed!");
@@ -213,7 +209,7 @@ void process_q2(Song* song_list, int array_size){
 
     fprintf(output_file,"Artist(s),Song\n");
 
-    //Iterate through song_list, if artist == Tate McRae then print to output file
+    // Iterate through song_list, if artist == Tate McRae then print to output file
     for (int i = 0; i < array_size; i++){
         if(strcmp(song_list[i].artist,"Tate McRae")==0){
             fprintf(output_file,"%s,%s\n",song_list[i].artist,song_list[i].song_name);
@@ -225,7 +221,7 @@ void process_q2(Song* song_list, int array_size){
 
 void process_q3(Song* song_list, int array_size){
 
-    FILE* output_file = fopen("test03.csv","w");
+    FILE* output_file = fopen("output.csv","w");
 
     if(output_file==NULL){
         printf("\nFile creation failed!");
@@ -233,7 +229,7 @@ void process_q3(Song* song_list, int array_size){
 
     fprintf(output_file,"Artist(s),Song\n");
 
-    //Iterate through song_list, if artist == The Weeknd and mode == Major then print to output file
+    // Iterate through song_list, if artist == The Weeknd and mode == Major then print to output file
     for (int i = 0; i < array_size; i++){
         if(strcmp(song_list[i].artist,"The Weeknd")==0 && strcmp(song_list[i].mode,"Major\n")==0){
             fprintf(output_file,"%s,%s\n",song_list[i].artist,song_list[i].song_name);
@@ -245,7 +241,7 @@ void process_q3(Song* song_list, int array_size){
 
 void process_q4(Song* song_list, int array_size){
 
-    FILE* output_file = fopen("test04.csv","w");
+    FILE* output_file = fopen("output.csv","w");
 
     if(output_file==NULL){
         printf("\nFile creation failed!");
@@ -253,7 +249,7 @@ void process_q4(Song* song_list, int array_size){
 
     fprintf(output_file,"Artist(s),Song\n");
 
-    //Iterate through song_list, if spotify_playlists > 5000 and key == A or D then print to output file
+    // Iterate through song_list, if spotify_playlists > 5000 and key == A or D then print to output file
     for (int i = 0; i < array_size; i++){
         if(song_list[i].spotify_playlists > 5000){
             if(strcmp(song_list[i].key,"A")==0 || strcmp(song_list[i].key,"D")==0){
@@ -267,7 +263,7 @@ void process_q4(Song* song_list, int array_size){
 
 void process_q5(Song* song_list, int array_size){
 
-    FILE* output_file = fopen("test05.csv","w");
+    FILE* output_file = fopen("output.csv","w");
 
     if(output_file==NULL){
         printf("\nFile creation failed!");
@@ -275,11 +271,10 @@ void process_q5(Song* song_list, int array_size){
 
     fprintf(output_file,"Artist(s),Song\n");
 
-
-    //Iterate through song_list, if release_year == 2021 or 2022, and Drake is one of the artists then print to output file
+    // Iterate through song_list, if release_year == 2021 or 2022, and Drake is one of the artists then print to output file
     for (int i = 0; i < array_size; i++){
         if(song_list[i].release_year == 2021 || song_list[i].release_year == 2022){
-            bool drake_found = find_drake(song_list[i].artist); //Helper function 
+            bool drake_found = find_drake(song_list[i].artist); // Call Drake function 
 
             if(drake_found == true){
                 //printf("\n%s",song_list[i].artist);
@@ -300,11 +295,11 @@ bool find_drake(char *artist_line){
 
     token = strtok(line_artist," ");
 
-    //Check if first string in the line is == Drake
+    // Check if first string in the line is == Drake
     if(strcmp(token,"Drake")==0){
         drake_found = true;
     }
-    
+    // Continue checking until end of line
     while(token!=NULL && drake_found == false){
         //If 'Drake' is found then break out of loop and change bool to true
         if(strcmp(token,"Drake")==0){
